@@ -1,0 +1,83 @@
+\documentclass{beamer}
+
+% If you use the optional handout parameter below, none of the pauses between slides are printed.  Only one of these first two lines should be used at a time.
+% \documentclass[handout]{beamer}
+
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{amsmath, amsthm, amssymb, upgreek, amscd, verbatim, xcolor}
+\usepackage{centernot}
+\usepackage{datetime}
+\usepackage{fontspec}
+\usepackage[slantfont, boldfont]{xeCJK}
+\usepackage{graphicx} 
+\usepackage{float} 
+\usepackage{subfigure}
+\usepackage{tikz}
+\usepackage{unicode-math} 
+\usepackage{extarrows}
+\usepackage{graphicx}
+
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{items}[circle]
+
+% Use the XITS font
+\setmathfont{XITSMath-Regular}
+\setmainfont{XITSMath-Regular}
+\setsansfont{XITSMath-Regular}
+\setmonofont{XITSMath-Regular}
+
+\setCJKmainfont{SimSun}[BoldFont=SimHei, ItalicFont=KaiTi]
+
+% File matadata
+\newcommand{\DocumentTitle}{Page Rank Algorithm}
+\newcommand{\DocumentAuthor}{Guxiao Hu}
+
+\hypersetup{
+pdftitle={\DocumentTitle},
+% pdfsubject={lorem ipsum},  % TODO
+pdfauthor={\DocumentAuthor}, 
+% pdfkeywords={lorem ipsum}  % TODO
+}
+
+%New Commands
+\newcommand{\ssm}{\,{}^\smallsetminus\,}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\F}{\mathbb{F}}
+
+\begin{document}
+\title{\textbf\DocumentTitle}
+\author{\DocumentAuthor}
+\date{\today}
+
+\maketitle
+
+\begin{frame}{Table of Contents}
+    \tableofcontents
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}{Definition}
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\end{frame}
+
+\section{Ending}
+
+\begin{frame}{Ending}
+    \begin{center}
+        {\Huge{Thanks!}}
+    \end{center}
+\end{frame}
+
+\end{document}
