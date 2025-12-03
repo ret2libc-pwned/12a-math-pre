@@ -9,7 +9,6 @@
 \usepackage{centernot}
 \usepackage{datetime}
 \usepackage{fontspec}
-\usepackage[slantfont, boldfont]{xeCJK}
 \usepackage{graphicx} 
 \usepackage{float} 
 \usepackage{subfigure}
@@ -18,22 +17,18 @@
 \usepackage{extarrows}
 \usepackage{graphicx}
 
-
 \usetheme{Madrid}
 \usecolortheme{seahorse}
 \setbeamertemplate{items}[circle]
+\usefonttheme{serif}
 
 % Use the XITS font
 \setmathfont{XITSMath-Regular}
-\setmainfont{XITSMath-Regular}
-\setsansfont{XITSMath-Regular}
-\setmonofont{XITSMath-Regular}
+\setmainfont{XITS}
 
-\setCJKmainfont{SimSun}[BoldFont=SimHei, ItalicFont=KaiTi]
-
-% File matadata
-\newcommand{\DocumentTitle}{Page Rank Algorithm}
-\newcommand{\DocumentAuthor}{Guxiao Hu}
+% File metadata
+\newcommand{\DocumentTitle}{PageRank Algorithm}
+\newcommand{\DocumentAuthor}{Guxiao Hu, Puyuan Zhang, Xiu Chen, Zipei Zhu}
 
 \hypersetup{
 pdftitle={\DocumentTitle},
@@ -63,13 +58,139 @@ pdfauthor={\DocumentAuthor},
 
 \section{Introduction}
 
-\begin{frame}{Definition}
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\begin{frame}{How do search engines work?}
+    \textit{You are an engineer in {\color{blue}{G}}{\color{orange}{u}}{\color{red}{g}}{\color{green}{l}}{\color{blue}{o}}{\color{red}{o}} designing a search engine in the 1990s.}
+
+    Consider: how to rank the results for each query?
+    \pause
+    \begin{itemize}
+        \item Relevance
+        \pause
+            \begin{itemize}
+                \item NLP-focused approaches. May be discussed at the end of the pre (also linear-algebra heavy!).
+            \end{itemize}
+        \pause
+        \item Importance
+        \pause
+            \begin{itemize}
+                \item Sorting on accessing counts?
+            \end{itemize}
+    \end{itemize}  
+    \pause
+    PageRank algorithm focuses on \textit{how important} each webpage is.
+\end{frame}
+
+\section{Algorithm Overview}
+
+\begin{frame}{The ``Random Surfer'' Model}
+    The PageRank algorithm 
+    \begin{itemize}
+        \item iterates on a \textbf{graph} where webpages are \textbf{nodes}, and links are \textbf{directed edges},
+        \item calculates the probability of a ``random surfer'' visiting each of the webpages,
+        \item outputs a probability distribution vector.
+                $$
+                    \boldsymbol p = \begin{bmatrix}
+                    \Pr(1) & \Pr(2) & \cdots & \Pr(n)
+                    \end{bmatrix}^\mathsf T
+                $$
+        % TODO converge 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Algorithm}
+    \begin{block}{Notations and Conventions}
+        \begin{itemize}
+            \item Let $n$ denote the number of nodes (i.e. total number of webpages).
+            \item Let $\deg^+(u)$ denote the \textbf{out degree} of node $u$ (i.e. number of outreaching links on webpage $u$).
+        \end{itemize}
+    \end{block}
+
+    \begin{definition}
+        \textbf{Google PageRank\footnote{Trademark of Google; U.S. patent 6,285,999.} iteration}: Initially, $\Pr(i) := 1 / n$ for each webpage $1 \le i \le n$. Then iterate by
+        $$
+            \Pr(v) := \frac{1-d}{n} + d\sum_{\text{edge $u\to v$}} \frac{1}{\deg^+(u)}\Pr(u)
+        $$
+        where $d$ is the \textbf{damping factor} ($0 < d < 1$). 
+    \end{definition}
+\end{frame}
+
+\section{Computing PageRank}
+
+\begin{frame}{Computing PageRank}
+    \begin{itemize}
+        \item Storing graphs in computers $\rightarrow$ adjacent matrices;
+        \pause
+        \item Converting adjacent matrices to ``multiplicable" matrices for iterations;
+        \pause
+        \item Linear iterations $\rightarrow$ multiplication of matrices.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Matrix Algebra}
+    \begin{block}{A Simplified Model}
+        Let \textbf{stochastic matrix}
+        $$
+            \mathcal M_{ij} := \begin{cases}
+                \dfrac{1}{\deg^+ (j)} & \text{edge $j \to i$}\\
+                0 & \text{otherwise}
+            \end{cases}
+        $$
+        i.e., given \textbf{adjacent matrix} $A_{ij} = [\text{edge $i\to j$}]$ and diagonal matrix $K$  with the outdegrees in the diagonal,
+        $$
+            \mathcal M := (K^{-1}A)^\mathsf T
+        $$
+    \end{block}
+    \begin{definition}
+        Let \textbf{probability distribution vector} of the $k$-th iteration be
+        $$
+            \boldsymbol p(k) := \begin{bmatrix}
+                \Pr(1) & \Pr(2) & \cdots & \Pr(n)
+            \end{bmatrix}^\mathsf T
+        $$
+        which initially sets to
+        $$
+        \boldsymbol p(0) := \begin{bmatrix}
+            1/n & 1/n & \cdots & 1/n
+        \end{bmatrix}^\mathsf T
+        $$
+    \end{definition}
+    \begin{definition}
+        The \textbf{Google matrix} $\widehat{\mathcal M}$ is defined by
+        $$
+            \widehat{\mathcal M} := d\mathcal M + \frac{1 - d}{n} E
+        $$
+        where $E$ is $n \times n$ matrix of all ones (so that $E\boldsymbol p = \boldsymbol 1$), and $0 < d < 1$ is the damping factor. 
+    \end{definition}
+
+    \begin{block}{The Power Method}
+        Google PageRank can be computed by
+        $$
+            \boldsymbol p(k + 1) = \widehat{\mathcal M}\boldsymbol p(k) \Longrightarrow \boldsymbol p(k) = \left(\widehat{\mathcal M}\right)^k \boldsymbol p(0)
+        $$
+    \end{block}
+\end{frame}
+
+\section{Applications}
+
+\begin{frame}{Applications}
+    \begin{itemize}
+        \item Evaluating academic papers based on citation counts. 
+    \end{itemize}
+\end{frame}
+
+\section{Extensions}
+
+\begin{frame}{Further Reading}
+    Suggested topics for further reading:
+    \begin{itemize}
+        \item Markov Chains
+        \item Some Easy Ways to Briefly Analyze ``Relevance'':
+            \begin{itemize}
+                \item Word frequency (TF / TF-IDF)
+                \item Proximity scoring (word vectors)
+                \item Matching phrases (bags-of-words)
+            \end{itemize}
+    \end{itemize}
 \end{frame}
 
 \section{Ending}
