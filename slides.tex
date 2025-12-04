@@ -61,13 +61,13 @@ pdfauthor={\DocumentAuthor},
 \begin{frame}{How do search engines work?}
     \textit{You are an engineer in {\color{blue}{G}}{\color{orange}{u}}{\color{red}{g}}{\color{green}{l}}{\color{blue}{o}}{\color{red}{o}} designing a search engine in the 1990s.}
 
-    Consider: how to rank the results for each query?
+    Consider: how to rank results for each query?
     \pause
     \begin{itemize}
         \item Relevance
         \pause
             \begin{itemize}
-                \item NLP-focused approaches. May be discussed at the end of the pre (also linear-algebra heavy!).
+                \item NLP-focused approaches. May be discussed at the end of this pre (also linear-algebra heavy!).
             \end{itemize}
         \pause
         \item Importance
@@ -86,14 +86,13 @@ pdfauthor={\DocumentAuthor},
     The PageRank algorithm 
     \begin{itemize}
         \item iterates on a \textbf{graph} where webpages are \textbf{nodes}, and links are \textbf{directed edges},
-        \item calculates the probability of a ``random surfer'' visiting each of the webpages,
+        \item calculates the probability of a ``random surfer'' visiting each webpage,
         \item outputs a probability distribution vector.
                 $$
                     \boldsymbol p = \begin{bmatrix}
                     \Pr(1) & \Pr(2) & \cdots & \Pr(n)
                     \end{bmatrix}^\mathsf T
                 $$
-        % TODO converge 
     \end{itemize}
 \end{frame}
 
@@ -118,17 +117,14 @@ pdfauthor={\DocumentAuthor},
 
 \begin{frame}{Computing PageRank}
     \begin{itemize}
-        \item Storing graphs in computers $\rightarrow$ adjacent matrices;
-        \pause
-        \item Converting adjacent matrices to ``multiplicable" matrices for iterations;
-        \pause
-        \item Linear iterations $\rightarrow$ multiplication of matrices.
+        \item A node is important if important nodes point to it.
+	    \item A node contributes part of its importance to the nodes it points to.
     \end{itemize}
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Matrix Algebra}
     \begin{block}{A Simplified Model}
-        Let \textbf{stochastic matrix}
+        Let \textbf{transition matrix}
         $$
             \mathcal M_{ij} := \begin{cases}
                 \dfrac{1}{\deg^+ (j)} & \text{edge $j \to i$}\\
@@ -147,7 +143,7 @@ pdfauthor={\DocumentAuthor},
                 \Pr(1) & \Pr(2) & \cdots & \Pr(n)
             \end{bmatrix}^\mathsf T
         $$
-        which initially sets to
+        which is initially set to
         $$
         \boldsymbol p(0) := \begin{bmatrix}
             1/n & 1/n & \cdots & 1/n
@@ -165,16 +161,81 @@ pdfauthor={\DocumentAuthor},
     \begin{block}{The Power Method}
         Google PageRank can be computed by
         $$
-            \boldsymbol p(k + 1) = \widehat{\mathcal M}\boldsymbol p(k) \Longrightarrow \boldsymbol p(k) = \left(\widehat{\mathcal M}\right)^k \boldsymbol p(0)
+            \boldsymbol p(k + 1) = \widehat{\mathcal M}\boldsymbol p(k)
         $$
+        One may assume PageRank converges after $|\boldsymbol p(t) - \boldsymbol p(t - 1)| < \epsilon$.
     \end{block}
 \end{frame}
 
-\section{Applications}
+\section{Mechanisms}
+
+\begin{frame}{PageRank and Eigenvectors}
+    Recall the equation
+    $$
+    \begin{aligned}
+        \boldsymbol p(k + 1) &= \widehat{\mathcal M}\boldsymbol p(k)\\
+        \pause
+        \Rightarrow \boldsymbol p &= \widehat{\mathcal M}\boldsymbol p \quad \text{(when converged)}
+    \end{aligned}
+    $$
+    \pause
+    Iteration is ``finding a vector that remains unchanged by linear transformation $\widehat{\mathcal M}$''.
+    \pause
+    \begin{definition}
+        $\boldsymbol v$ is the \textbf{eigenvector}, and $\lambda$ is the \textbf{eigenvalue} of matrix $A$, if
+        $$
+            A\boldsymbol v = \lambda \boldsymbol v
+        $$
+    \end{definition}
+    \pause
+    In fact, $\boldsymbol p$ is the \textbf{principle eigenvector} of the Google matrix $\widehat{\mathcal M}$, and $1$ is the corresponding eigenvalue (i.e. the eigenvalue with the largest magnitude).
+\end{frame}
+
+\begin{frame}{Properties}
+    \begin{corollary}
+        \begin{enumerate}
+            \item $\boldsymbol p$ is the principle eigenvector of $\widehat{\mathcal M}$, and $1$ is the corresponding eigenvalue (i.e. the eigenvalue with the largest magnitude).
+                
+                By the Perron–Frobenius Theorem,
+                \begin{itemize}
+                    \item $\boldsymbol p$ is unique, strictly positive
+                    \item \textbf{iteration converges.}
+                \end{itemize}
+            \item Both $\mathcal M$ and $\widehat{\mathcal M}$ are \textbf{column-stochastic} (sums of each column are 1), positive.
+            % TODO
+        \end{enumerate}
+    \end{corollary}
+    Therefore, PageRank algorithm converges to steady probability distribution.
+    \pause
+
+    \textit{Question}: will the simplified model $\boldsymbol p(k + 1) = \mathcal M \boldsymbol p(k)$  we define before always converge?
+\end{frame}
+
+
+\begin{frame}{A View on Probability}
+    Matrix multiplication $\to$ updating probability.
+    % TODO
+    \pause
+
+    Reason to use the damping factor? \pause To avoid trapping. 
+    \pause
+    \begin{itemize}
+        \item With a probability of $d$, ``random surfing'' continues;
+        \item with a probability of $1 - d$, surfer redirects to another random page.
+    \end{itemize}
+    \pause
+\end{frame}
+
+\section{Applications and Extensions}
 
 \begin{frame}{Applications}
+    Generalizing \textit{importance}. 
+    \pause
     \begin{itemize}
-        \item Evaluating academic papers based on citation counts. 
+        \item Evaluating academic papers based on citations.
+        \item Determine species that are essential to the continuing health of ecosystems.
+        \item Ranking performance of sports teams.
+        \item ... 
     \end{itemize}
 \end{frame}
 
@@ -183,12 +244,14 @@ pdfauthor={\DocumentAuthor},
 \begin{frame}{Further Reading}
     Suggested topics for further reading:
     \begin{itemize}
-        \item Markov Chains
+        \item PageRank is actually a variation of \textbf{the Markov Chains}.
+        \pause
         \item Some Easy Ways to Briefly Analyze ``Relevance'':
             \begin{itemize}
                 \item Word frequency (TF / TF-IDF)
                 \item Proximity scoring (word vectors)
                 \item Matching phrases (bags-of-words)
+                \item ...
             \end{itemize}
     \end{itemize}
 \end{frame}
