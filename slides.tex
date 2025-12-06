@@ -107,7 +107,7 @@ pdfauthor={\DocumentAuthor},
     \begin{definition}
         \textbf{Google PageRank\footnote{Trademark of Google; U.S. patent 6,285,999.} iteration}: Initially, $\Pr(i) := 1 / n$ for each webpage $1 \le i \le n$. Then iterate by
         $$
-            \Pr(v) := \frac{1-d}{n} + d\sum_{\text{edge $u\to v$}} \frac{1}{\deg^+(u)}\Pr(u)
+            \Pr(v) := (1 - d)\frac{1}{n} + d\sum_{\text{edge $u\to v$}} \frac{1}{\deg^+(u)}\Pr(u)
         $$
         where $d$ is the \textbf{damping factor} ($0 < d < 1$). 
     \end{definition}
@@ -201,38 +201,46 @@ pdfauthor={\DocumentAuthor},
 \end{frame}
 
 \begin{frame}{Properties}
-    \begin{corollary}
-        \begin{enumerate}
-            \item $\boldsymbol p$ is the principal eigenvector of $\widehat{\mathcal M}$, and $1$ is the corresponding eigenvalue (i.e. the eigenvalue with the largest magnitude).
-                
-                By the Perron–Frobenius Theorem,
-                \begin{itemize}
-                    \item $\boldsymbol p$ is unique, strictly positive
-                    \item \textbf{iteration converges.}
-                \end{itemize}
+    \begin{fact}
+        \begin{itemize}
             \item Both $\mathcal M$ and $\widehat{\mathcal M}$ are \textbf{column-stochastic} (sums of each column are 1), positive.
-            % TODO
-        \end{enumerate}
-    \end{corollary}
-    Therefore, PageRank algorithm converges to steady probability distribution.
-    \pause
-
-    \textit{Question}: will the simplified model $\boldsymbol p(k + 1) = \mathcal M \boldsymbol p(k)$  we defined before always converge?
+                $$
+                \sum_i \widehat{M}_{ij} = 1 \  (\forall j) \Longleftrightarrow \boldsymbol{1}^\mathsf T \widehat{M} = \boldsymbol{1}^\mathsf T
+                $$
+                ($\boldsymbol{1}^\mathsf T$ is a left eigenvector with eigenvalue $1$ $\Rightarrow$ $1$ is an eigenvalue of $\widehat{\mathcal M}$)
+            \item Both $\mathcal M$ and $\widehat{\mathcal M}$ are positive matrices. 
+        \end{itemize}
+    \end{fact}
+    By the \textbf{Perron–Frobenius theorem},
+    \begin{itemize}
+        \item all other eigenvalues $\lambda_i$ satisfy $|\lambda_i| < 1$,
+        \item the corresponding eigenvector r has all positive entries.
+    \end{itemize}
 \end{frame}
 
-
 \begin{frame}{A View on Probability}
-    Matrix multiplication $\to$ updating probability.
-    % TODO
+    Matrix multiplication $\to$ updating probability distribution vector.
     \pause
 
-    Reason to use the damping factor? \pause To avoid trapping. 
+    Reason to use the damping factor? \pause To avoid trapping (jumping across several pages forever). 
     \pause
     \begin{itemize}
         \item With a probability of $d$, ``random surfing'' continues;
+        \begin{itemize}
+            \item Each $u$ has equal chance $1/\deg^+(u)$ to redirect to $v$
+        \end{itemize}
         \item with a probability of $1 - d$, surfer redirects to another random page.
+        \begin{itemize}
+            \item Each of the $n$ pages has equal chance to redirect to the current page.
+        \end{itemize}
     \end{itemize}
     \pause
+    $$
+        \begin{aligned}
+            \mathbb P(\text{arriving at $v$ | arriving at $u$}) :=& (1 - d)\frac{1}{n} + \\
+            & d\sum_{\text{edge $u\to v$}} \frac{1}{\deg^+(u)}\mathbb P(\text{arriving at $u$})
+        \end{aligned}
+    $$
 \end{frame}
 
 \section{Applications and Extensions}
@@ -248,19 +256,39 @@ pdfauthor={\DocumentAuthor},
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Further Reading}
+\begin{frame}{Further Reading I}
     Suggested topics for further reading:
-    \begin{itemize}
-        \item PageRank is actually a variation of \textbf{the Markov Chains}.
-        \pause
-        \item Some Easy Ways to Briefly Analyze ``Relevance'':
-            \begin{itemize}
-                \item Word frequency (TF / TF-IDF)
-                \item Proximity scoring (word vectors)
-                \item Matching phrases (bags-of-words)
-                \item ...
-            \end{itemize}
-    \end{itemize}
+    \begin{block}{Topic}
+        PageRank is actually a variation of \textbf{the Markov Chains}.
+    \end{block}
+    \begin{fact}
+        Random walk which is
+        \begin{itemize}
+            \item \textbf{irreducible}: with probability of $1/d$, surfer can reach any node with one step $\Rightarrow$ all nodes are reachable ($\Pr > 0$) to the surfer.
+            \item \textbf{aperiodic}: with probability of $d$, surfer stops on their current page $\Rightarrow$ no fixed-length cycles in transition
+            \item \textbf{positive recurrent}: expected return time to any node is finite
+        \end{itemize}
+        converges to a stationary distribution.
+    \end{fact}
+\end{frame}
+
+\begin{frame}{Question}
+    Will the simplified model $\boldsymbol p(k + 1) = \mathcal M \boldsymbol p(k)$  we defined before always converge?
+    \pause
+
+    \textit{If not,} what will happen and why? Construct test-cases to prove.
+\end{frame}
+
+\begin{frame}{Further Reading II}
+    \begin{block}{Topic}
+        Some Easy Ways to Briefly Analyze ``Relevance'':
+        \begin{itemize}
+            \item Word frequency (TF / TF-IDF)
+            \item Proximity scoring (word vectors)
+            \item Matching phrases (bags-of-words)
+            \item ...
+        \end{itemize}
+    \end{block}
 \end{frame}
 
 \section{Ending}
