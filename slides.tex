@@ -116,10 +116,19 @@ pdfauthor={\DocumentAuthor},
 \section{Computing PageRank}
 
 \begin{frame}{Computing PageRank}
-    \begin{itemize}
-        \item A node is important if important nodes point to it.
-	    \item A node contributes part of its importance to the nodes it points to.
-    \end{itemize}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \begin{itemize}
+                \item A node is important if important nodes point to it.
+                \item A node contributes part of its importance to the nodes it points to.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{images/PageRanks-Example.png}
+        \end{column}
+    \end{columns}
+    
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Matrix Algebra}
@@ -188,13 +197,13 @@ pdfauthor={\DocumentAuthor},
         $$
     \end{definition}
     \pause
-    In fact, $\boldsymbol p$ is the \textbf{principle eigenvector} of the Google matrix $\widehat{\mathcal M}$, and $1$ is the corresponding eigenvalue (i.e. the eigenvalue with the largest magnitude).
+    In fact, $\boldsymbol p$ is the \textbf{principal eigenvector} of the Google matrix $\widehat{\mathcal M}$, and $1$ is the corresponding eigenvalue (i.e. the eigenvalue with the largest magnitude).
 \end{frame}
 
 \begin{frame}{Properties}
     \begin{corollary}
         \begin{enumerate}
-            \item $\boldsymbol p$ is the principle eigenvector of $\widehat{\mathcal M}$, and $1$ is the corresponding eigenvalue (i.e. the eigenvalue with the largest magnitude).
+            \item $\boldsymbol p$ is the principal eigenvector of $\widehat{\mathcal M}$, and $1$ is the corresponding eigenvalue (i.e. the eigenvalue with the largest magnitude).
                 
                 By the Perron–Frobenius Theorem,
                 \begin{itemize}
@@ -208,7 +217,7 @@ pdfauthor={\DocumentAuthor},
     Therefore, PageRank algorithm converges to steady probability distribution.
     \pause
 
-    \textit{Question}: will the simplified model $\boldsymbol p(k + 1) = \mathcal M \boldsymbol p(k)$  we define before always converge?
+    \textit{Question}: will the simplified model $\boldsymbol p(k + 1) = \mathcal M \boldsymbol p(k)$  we defined before always converge?
 \end{frame}
 
 
@@ -238,8 +247,6 @@ pdfauthor={\DocumentAuthor},
         \item ... 
     \end{itemize}
 \end{frame}
-
-\section{Extensions}
 
 \begin{frame}{Further Reading}
     Suggested topics for further reading:
