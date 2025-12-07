@@ -74,6 +74,7 @@ pdfauthor={\DocumentAuthor},
         \pause
             \begin{itemize}
                 \item Sorting on accessing counts?
+                \item Sorting on query term coverage (\# query terms appear in each result)?
             \end{itemize}
     \end{itemize}  
     \pause
@@ -205,16 +206,16 @@ pdfauthor={\DocumentAuthor},
         \begin{itemize}
             \item Both $\mathcal M$ and $\widehat{\mathcal M}$ are \textbf{column-stochastic} (sums of each column are 1), positive.
                 $$
-                \sum_i \widehat{M}_{ij} = 1 \  (\forall j) \Longleftrightarrow \boldsymbol{1}^\mathsf T \widehat{M} = \boldsymbol{1}^\mathsf T
+                \sum_i \widehat{\mathcal M}_{ij} = 1 \  (\forall j) \Longleftrightarrow \boldsymbol{1}^\mathsf T \widehat{\mathcal M} = \boldsymbol{1}^\mathsf T
                 $$
-                ($\boldsymbol{1}^\mathsf T$ is a left eigenvector with eigenvalue $1$ $\Rightarrow$ $1$ is an eigenvalue of $\widehat{\mathcal M}$)
-            \item Both $\mathcal M$ and $\widehat{\mathcal M}$ are positive matrices. 
+                ($\boldsymbol{1}^\mathsf T$ is a \textbf{left eigenvector} with eigenvalue $1$ $\Rightarrow$ $1$ is an eigenvalue of $\widehat{\mathcal M}$)
+            \item $\widehat{\mathcal M}$ is positive matrix. 
         \end{itemize}
     \end{fact}
-    By the \textbf{Perron–Frobenius theorem},
+    By the \textbf{Perron–Frobenius theorem}, $\widehat{\mathcal M}$ satisfies
     \begin{itemize}
         \item all other eigenvalues $\lambda_i$ satisfy $|\lambda_i| < 1$,
-        \item the corresponding eigenvector r has all positive entries.
+        \item the corresponding eigenvector has all positive entries.
     \end{itemize}
 \end{frame}
 
@@ -222,7 +223,7 @@ pdfauthor={\DocumentAuthor},
     Matrix multiplication $\to$ updating probability distribution vector.
     \pause
 
-    Reason to use the damping factor? \pause To avoid trapping (jumping across several pages forever). 
+    Reason to use the damping factor? \pause To avoid trapping. 
     \pause
     \begin{itemize}
         \item With a probability of $d$, ``random surfing'' continues;
@@ -237,8 +238,9 @@ pdfauthor={\DocumentAuthor},
     \pause
     $$
         \begin{aligned}
-            \mathbb P(\text{arriving at $v$ | arriving at $u$}) :=& (1 - d)\frac{1}{n} + \\
-            & d\sum_{\text{edge $u\to v$}} \frac{1}{\deg^+(u)}\mathbb P(\text{arriving at $u$})
+            \mathbb P(v) &= \mathbb P(v | \text{randomly redirected}) + \sum_{\text{edge $u \to v$}} \mathbb P(v | u) \\
+             &= (1 - d)\frac{1}{n} + 
+            d\sum_{\text{edge $u\to v$}} \frac{1}{\deg^+(u)}\mathbb P(u)
         \end{aligned}
     $$
 \end{frame}
@@ -264,9 +266,9 @@ pdfauthor={\DocumentAuthor},
     \begin{fact}
         Random walk which is
         \begin{itemize}
-            \item \textbf{irreducible}: with probability of $1/d$, surfer can reach any node with one step $\Rightarrow$ all nodes are reachable ($\Pr > 0$) to the surfer.
+            \item \textbf{irreducible}: with probability of $1/d$, surfer can reach any page with one step $\Rightarrow$ all pages are reachable ($\Pr > 0$) to the surfer
             \item \textbf{aperiodic}: with probability of $d$, surfer stops on their current page $\Rightarrow$ no fixed-length cycles in transition
-            \item \textbf{positive recurrent}: expected return time to any node is finite
+            \item \textbf{positive recurrent}: expected return time to any page is finite
         \end{itemize}
         converges to a stationary distribution.
     \end{fact}
